@@ -56,6 +56,13 @@ public class MongoPaginatingSplitter extends MongoCollectionSplitter {
                 + "compound key.");
         }
         String splitKey = splitKeys.iterator().next();
+        if (!splitKeyObj.get(splitKey).equals(1)) {
+            throw new IllegalArgumentException(
+              "Cannot split using " + getClass().getName() + " when "
+                + MongoConfigUtil.INPUT_SPLIT_KEY_PATTERN + " doesn't use "
+                + "ascending sort.");
+        }
+
         int minDocs = MongoConfigUtil.getInputSplitMinDocs(conf);
         DBCollection inputCollection =
           MongoConfigUtil.getInputCollection(conf);

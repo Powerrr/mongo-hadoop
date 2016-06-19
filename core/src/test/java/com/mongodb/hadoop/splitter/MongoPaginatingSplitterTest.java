@@ -86,4 +86,17 @@ public class MongoPaginatingSplitterTest {
         assertSplitsCount(collection.count(), splits);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testDescendingSplitKeySort() throws SplitFailedException {
+        Configuration conf = new Configuration();
+        MongoConfigUtil.setInputURI(conf, uri);
+        MongoConfigUtil.setRangeQueryEnabled(conf, true);
+        MongoConfigUtil.setInputSplitMinDocs(conf, 5000);
+        MongoConfigUtil.setInputSplitKey(conf, new BasicDBObject("_id", -1));
+
+        MongoPaginatingSplitter splitter = new MongoPaginatingSplitter(conf);
+
+        splitter.calculateSplits();
+    }
+
 }
